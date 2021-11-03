@@ -1,13 +1,8 @@
 # AWS Cloud Practitioner
 
-## Source
-+ Stephane maarek [Ultimate AWS Certified Cloud Practitioner - 2021](https://www.udemy.com/course/aws-certified-cloud-practitioner-new/)
-
----
-
 ## Table of contents
 
-10. [Other compute services](#10-ecs-lamda-batch-lightsail)
+10. [Other compute services](#10-other-compute-services)
   + [what is docker?](#what-is-docker)
   + [ECS](#ecs)
   + [lamda](#lamda)
@@ -38,6 +33,7 @@
 12. [Leveraging AWS Global infrastructure](#12-leveraging-aws-global-infrastructure)
 
 ---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
 ## 10. Other compute services
 
@@ -53,6 +49,9 @@ diff between Docker vs virtual machine VM
 * each VM needs an OS
 * docker makes use of many containers sharing the same resources dont need full VM or OS.
 
+---
+
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
 ## 11. Deploying and managing infrastructure at scale
 ways to deploy workloads onto AWS
@@ -191,4 +190,15 @@ these servers must be provisioned/configured ahead of time
 * pushing in Cloud9 goes directly to repository.
 
 ---
+
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+
 ## 12. Leveraging AWS Global infrastructure
+
+---
+
+## Source
+
++ Stephane maarek [Ultimate AWS Certified Cloud Practitioner - 2021](https://www.udemy.com/course/aws-certified-cloud-practitioner-new/)
+
+---
