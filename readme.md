@@ -2,25 +2,29 @@
 
 Learning about AWS eco-system and AWS features.
 
+## Summary
+
+---
+
 ## Table of contents
 
-### 01. Create an AWS account
+### 01. [Create an AWS account](#01-create-an-aws-account)
 
-### 02. code & slides
+### 02. [code and slides](#02-code-and-slides)
 
-### 03. Cloud Computing
+### 03. [Cloud Computing](#03-cloud-computing)
 
-### 04. IAM (identity and access management)
+### 04. [IAM (identity and access management)](#04-iam-identity-and-access-management)
 
-### 05. EC2 - Elastic Compute Cloud
+### 05. [EC2 - Elastic Compute Cloud](#05-ec2-elastic-compute-cloud)
 
-### 06. EC2 - Instance Storage
+### 06. [EC2 - Instance Storage](#06-ec2-instance-storage)
 
-### 07. ELB & ASG - Elastic Load Balancing & Auto Scaling Groups
+### 07. [ELB & ASG - Elastic Load Balancing & Auto Scaling Groups](#07-elb-and-asg-elastic-load-balancing-and-auto-scaling-groups)
 
-### 08. S3
+### 08. [S3](#08-s3)
 
-### 09. Databases and Analytics
+### 09. [Databases and Analytics](#09-database-and-analytics)
 
 ### 10. [Other compute services](#10-other-compute-services)
   + [what is docker?](#what-is-docker)
@@ -83,10 +87,51 @@ Learning about AWS eco-system and AWS features.
 
 ### 21. AWS architecting & Ecosystem
 
-### 22. Summary
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+
+## 01. Create an AWS account
+
+Stay on the AWS free tier
+
 
 ---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
+## 02. Code and slides
+
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+
+## 03. Cloud computing
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 04. IAM (identity and access management)
+
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 05. EC2 - Elastic Compute Cloud
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 06. EC2 - Instance Storage
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 07. ELB and ASG - Elastic Load Balancing and Auto Scaling Groups
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 08. S3 
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 09. Database and analytics
+
+---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
 ## 10. Other compute services
@@ -455,10 +500,6 @@ allows you to place AWS compute, storage, database, and other AWS Services close
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 21. AWS architecting & Ecosystem
 
-
----
-###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
-## 22. Summary
 
 ---
 
