@@ -4,6 +4,24 @@ Learning about AWS eco-system and AWS features.
 
 ## Table of contents
 
+### 01. Create an AWS account
+
+### 02. code & slides
+
+### 03. Cloud Computing
+
+### 04. IAM (identity and access management)
+
+### 05. EC2 - Elastic Compute Cloud
+
+### 06. EC2 - Instance Storage
+
+### 07. ELB & ASG - Elastic Load Balancing & Auto Scaling Groups
+
+### 08. S3
+
+### 09. Databases and Analytics
+
 ### 10. [Other compute services](#10-other-compute-services)
   + [what is docker?](#what-is-docker)
   + [ECS](#ecs)
@@ -48,6 +66,22 @@ Learning about AWS eco-system and AWS features.
   + [Global Applications Architecture](#global-applications-architecture)
 
 ### 13. [Cloud Integrations](#13-cloud-integrations)
+
+### 14. Cloud monitoring
+
+### 15. VPC & Networking
+
+### 16. Security and Compliance
+
+### 17. Machine Learning
+
+### 18. Account management, Billing and support
+
+### 19. Advanced Identity
+
+### 20. Other Services
+
+### 21. AWS architecting & Ecosystem
 
 ---
 
@@ -387,6 +421,37 @@ allows you to place AWS compute, storage, database, and other AWS Services close
 
 ## 13. Cloud Integrations
 
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 14. Cloud monitoring
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 15. VPC & Networking
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 16. Security and Compliance
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 17. Machine Learning
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 18. Account management, Billing and support
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 19. Advanced Identity
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 20. Other Services
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 21. AWS architecting & Ecosystem
 
 ---
 
