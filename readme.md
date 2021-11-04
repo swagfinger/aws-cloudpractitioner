@@ -83,6 +83,8 @@ Learning about AWS eco-system and AWS features.
 
 ### 21. AWS architecting & Ecosystem
 
+### 22. Summary
+
 ---
 
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
@@ -452,6 +454,11 @@ allows you to place AWS compute, storage, database, and other AWS Services close
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 21. AWS architecting & Ecosystem
+
+
+---
+###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 22. Summary
 
 ---
 
