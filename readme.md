@@ -71,21 +71,21 @@ Learning about AWS eco-system and AWS features.
 
 ### 13. [Cloud Integrations](#13-cloud-integrations)
 
-### 14. Cloud monitoring
+### 14. [Cloud monitoring](#14-cloud-monitoring)
 
-### 15. VPC & Networking
+### 15. [VPC & Networking](#15-vpc-and-networking)
 
-### 16. Security and Compliance
+### 16. [Security and Compliance](#16-security-and-compliance)
 
-### 17. Machine Learning
+### 17. [Machine Learning](#17-machine-learning)
 
-### 18. Account management, Billing and support
+### 18. [Account management, Billing and support](#18-account-management-billing-and-support)
 
-### 19. Advanced Identity
+### 19. [Advanced Identity](#19-advanced-identity)
 
-### 20. Other Services
+### 20. [Other Services](#20-other-services)
 
-### 21. AWS architecting & Ecosystem
+### 21. [AWS architecting and Ecosystem](#21-aws-architecting-and-ecosystem)
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
@@ -474,7 +474,7 @@ allows you to place AWS compute, storage, database, and other AWS Services close
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
-## 15. VPC & Networking
+## 15. VPC and Networking
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
@@ -498,7 +498,7 @@ allows you to place AWS compute, storage, database, and other AWS Services close
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
-## 21. AWS architecting & Ecosystem
+## 21. AWS architecting and Ecosystem
 
 
 ---
