@@ -1,8 +1,9 @@
 # AWS Cloud Practitioner
+* CLF-C01
+* Learning about AWS eco-system and AWS features.
+* covers 40 of the 200+ AWS services.
 
-Learning about AWS eco-system and AWS features.
 
-## Summary
 
 ---
 
@@ -10,10 +11,15 @@ Learning about AWS eco-system and AWS features.
 
 ### 01. [Create an AWS account](#01-create-an-aws-account)
 
-### 02. [code and slides](#02-code-and-slides)
+### 02. [Summary](#02-summary)
 
 ### 03. [Cloud Computing](#03-cloud-computing)
-
+  + [5 characteristics of cloud computing](#5-characteristics-of-cloud-computing)
+  + [6 advantages of cloud computing](#6-advantages-of-cloud-computing)
+  + [problems solved by the cloud](#problems-solved-by-the-cloud)
+  + [Types of cloud computing](#types-of-cloud-computing)
+  + [pricing of the cloud](#pricing-of-the-cloud)
+  + [AWS Global infrastructure](#aws-global-infrastructure)
 ### 04. [IAM (identity and access management)](#04-iam-identity-and-access-management)
 
 ### 05. [EC2 - Elastic Compute Cloud](#05-ec2-elastic-compute-cloud)
@@ -92,19 +98,146 @@ Learning about AWS eco-system and AWS features.
 
 ## 01. Create an AWS account
 
-Stay on the AWS free tier
+* does need a credit card, to verify identity (authorization)
+* Stay on the AWS free tier
+* root user account / password
 
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
-## 02. Code and slides
-
+## 02. Summary
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
 ## 03. Cloud computing
+* Cloud computing is the on-demand delivery of compute power, database storage, applications and other IT resources.
+* Cloud allows pay-as-you-go-pricing
+* provision exact type and size of computing
+* instance access
+* AWS cloud has nice interface to access these services.
+* AWS owns and maintains the network-connected hardware requried for these application services, while you provision and use what you need via a web application.
+The Cloud is the solution to externalize all the problems with traditional data centers.
+* the cloud has its own data center, servers.
+
+How Websites work
+* a server hosts a website
+* a have a client that makes a request via browser for resource on server
+* network routes packets (data) to server - request
+* server makes a response
+* client views the website
+
+for client to find server and server to respond to client, both need IP addresses for routing.
+
+#### what makes a Server  
+* CPU
+* memory (RAM)
+* Storage data
+* database (formatted data)
+* network aspect: routers, switch, DNS server
+
+#### problems with traditional data centers
+* rent space
+* pay for power, cooling, maintenance
+* time to add/replace servers
+* scaling is limited
+* hire someone 24/7 to monitor infrastructure
+
+#### deployment models of the cloud
+private cloud 
+* eg. Rackspace
+* service used by single organization, not exposed to public. complete control, security.
+
+public cloud 
+* AWS / Google cloud / Microsoft Axure
+* cloud resources owned by 3rd party cloud service provider are delivered over the internet.
+
+Hybrid Cloud
+* keep some servers on premises, extend capabilities to cloud.
+
+##### 5 characteristics of cloud computing
+* on demand service - users can provision these resources without intervention from AWS.
+* broad network access - access to resources
+* multi-tenancy and resource pooling - multiple customers can benefit from same infrastructure + security
+* rapid elasticity and scalibility - quickly acquire and dispose resources / scale on demand
+* measured service - pay for what you use
+
+##### 6 advantages of cloud computing
+1. trade capital expense (CAPEX) for operational expense (OPEX)
+    - pay on demand - don't own hardware
+    - reduce total cost of ownership (TCO) and Operational Expense (OPEX)
+2. benefit from advantages of scale
+    - prices lower because more effienct due to large scale use
+3. stop guessing capacity
+    - scale based on actual measured usage
+4. increase speed and agility
+5. no data center costs (running and maintaining)
+6. go global in minutes - leverages the AWS global infrastructure.
+
+##### problems solved by the cloud
+* flexibility
+* cost effective
+* scalability
+* elasticity
+* high-availability
+* agility
+
+#### Types of cloud computing
+
+##### infrastructure as a service (IaaS)
+  - networking, computers, data storage space
+  - we care about application and data and runtime / middleware / OS
+  - eg. Amazon EC2 
+
+##### platform as a service (PaaS)
+  - removes need for organization to manage the infrastructure
+  - we only care about the application and data
+  - eg. Elastic Beanstalk, Heroku, Google App Engine (GCP), MS Axure
+
+##### Software as a service (SaaS)
+  - completed product that is run and managed by service provider
+  - many aws service eg. Rekognition, machine learning, google apps, dropbox
+
+#### Pricing of the cloud
+3 pricing fundamentals
+* Compute - pay for compute time
+* storage - pay for data stored in the cloud
+* networking - pay for data transferred out of the cloud
+
+#### AWS Global infrastructure
+
+[https://infrastructure.aws](https://infrastructure.aws)
+##### AWS regions
+- named eg. us-east-1
+- region is a cluster of data centers
+- most AWS services are region scoped
+
+  ##### How to choose an AWS Region?
+  * compliance - data governance and legal requirements, data never leaves the region
+  * proximity - closer to users for lower latency
+  * available service within a region - new services arent available in every region
+  * pricing - pricing differs region to region
+  
+##### AWS availability Zones
+* each region has many availability zones (AZ)
+* usually 3, min 2, max 6 
+* eg. if region is ap-souteast-2, az will be named a,b,c eg. ap-souteast-2a
+* these AZ are separate from each other to isolate from disasters
+
+
+##### AWS Data Centers
+* each AZ is one ore more data centers
+* connected with highbandwidth, ultralow latency networking.
+
+##### AWS Edge Locations / Points of presence
+* AWS has more than 216 points of presence (205 edge locations, 11 regional caches)
+in 84 cities across 42 countries.
+
+#### AWS shared responsibility model
+AWS responsible: security OF the cloud - software, infrastructure, internal security
+
+Customer responsible: security IN the cloud - what you use in the cloud, security, data, OS
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
