@@ -79,6 +79,7 @@
   + [AWS Cloud9](#aws-cloud9)
 
 ### 12. [Leveraging AWS Global infrastructure](#12-leveraging-aws-global-infrastructure)
+
   + [Why use global applications?](#why-use-global-applications)
   
   ###### Global Applications in AWS
@@ -93,6 +94,7 @@
   + [AWS Local Zones](#aws-local-zones)
   --
   + [Global Applications Architecture](#global-applications-architecture)
+  + [Summary - Leveraging AWS Global Infrastructure](#summary-leveraging-the-aws-global-infrastructure)
 
 ### 13. [Cloud Integrations](#13-cloud-integrations)
 
@@ -153,6 +155,25 @@
       * create thumbnails for images uploaded to AWS S3
       * CRON job
   * API gateway exposes lambda functions as http APIs
+
+#### Summary - 12. Leveraging the AWS Global Infrastructure
+* Global DNS: Route 53
+  - greate to route users to closest deployment with least latency
+  - great for disaster recovery strategies
+* Global Content Delivery Network (CDN): CloudFront
+  - Cache common requests - improves user experience and decreased latency
+* S3 Transfer Acceleration
+  - Accelerate global uploads and downloads into Amazon S3
+* AWS Global Accelerator
+  - improve global application availability and performance using the AWS global network.
+* AWS Outposts
+  - Deploy Outpost racks into your own Data centers to extend AWS services
+* AWS WaveLength
+  - Brings AWS services to the edge of 5g networks
+  - Ultra low latency applications
+* AWS Local Zone
+  - Bring AWS Resources (Compute, database, storage) closer to your users
+  - Good for Latency-sensitive applications.
 
 --- 
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
@@ -942,6 +963,9 @@ allows you to place AWS compute, storage, database, and other AWS Services close
   - each EC2 instance can take writes/reads
   - replacation within these instances
   - more difficult to setup
+
+### Summary - Leveraging the AWS Global Infrastructure
+[Summary - 12. Leveraging the AWS Global Infrastructure](#summary-12-leveraging-the-aws-global-infrastructure)
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
