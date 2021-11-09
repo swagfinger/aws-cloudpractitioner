@@ -26,8 +26,14 @@
   + [3 ways to access AWS](#3-ways-to-access-aws)
   + [Access keys](#access-keys)
   + [AWS CloudShell](#aws-cloudshell)
+  + [IAM roles for AWS Services](#iam-roles-for-aws-services)
+  + [IAM security tools](#iam-security-tools)
+  + [IAM Shared responsibility model](#iam-shared-responsibility-model)
+  + [IAM Summary](#iam-summary)
 
 ### 05. [EC2 - Elastic Compute Cloud](#05-ec2-elastic-compute-cloud)
+  + [What can you do with EC2?](#what-can-you-do-with-ec2)
+  + [EC2 Virtual server - options](#ec2-virtual-server-options)
 
 ### 06. [EC2 - Instance Storage](#06-ec2-instance-storage)
 
@@ -39,7 +45,8 @@
 
 ### 10. [Other compute services](#10-other-compute-services)
   + [what is docker?](#what-is-docker)
-  + [ECS](#ecs)
+  + [ECS, Fargate & ECR Overview](#ecs-fargate-&-ecr-overview)
+  + [Serverless](#serverless)
   + [lamda](#lamda)
   + [batch](#batch)
   + [lightsail](#lightsail)
@@ -113,7 +120,7 @@
 
 ## 02. Summary
 
-#### IAM Section
+#### Summary - 04. IAM Section
 * users: mapped to a physical user; has a password for AWS Console
 * groups: contain users only
 * policies: JSON document that outlines permissions for users or groups
@@ -123,7 +130,24 @@
 * AWS SDK: manage your AWS services using a programming language
 * Access keys: access AWS using CLI or SDK
 * Audit: Credential Reports & IAM Access advisor
----
+
+#### Summary - 10. Other Compute services
+* Docker - container technology allowing you to run applications
+* ECS - run docker containers on EC2 instances
+* Fargate - run docker containers without provisioning the infrastructure - serverless (no EC2 instances)
+* ECR - private docker images repository
+* Batch - run batch jobs on AWS across managed EC2 instances
+* lightsale - predictable & low pricing for simple application & db stack
+* lambda - serverless FaaS (function as a service), seamless scaling, reactive
+  * Lambda billing - by time run * RAM provisioned
+  * number of invocations
+  * invocation time up to 15min
+  * use cases: 
+      * create thumbnails for images uploaded to AWS S3
+      * CRON job
+  * API gateway exposes lambda functions as http APIs
+
+--- 
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
 ## 03. Cloud computing
@@ -387,12 +411,65 @@ Common roles:
 * use IAM tools to apply appropriate permissions
 * analyze access patterns and review permissions
 
----
-###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
-## 05. EC2 - Elastic Compute Cloud
+### IAM Summary
+[Summary - IAM Section](#summary-iam-section)
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
+## 05. EC2 - Elastic Compute Cloud
+* make sure user has access to 'Billing and cost management dashboard'
+* login to root user
+* my billing dashboard -> activate IAM access - allows IAM administrators are allowed to access billing data (ensures you enable IAM user and role access to billing information)
+* know how to create a budget.
+* EC2 (Elastic Compute cloud) - infrastructure as a service
+
+#### What can you do with EC2?
+* rent virtual machines (EC2)
+* storing data on virtual drives (EBS)
+* distribute load across machines (ELB)
+* scaling service using auto-scaling group (ASG)
+
+#### EC2 Virtual server - options
+* windows or linux, mac
+* CPU
+* RAM
+* storage 
+    - network attached (EBS or EFS)
+    - hardware (EC2 instance store)
+* network card (performance), speed and public IP address
+* firewall rules (security group)
+* Bootstrap script (configure first launch) (EC2 User Data - runs as root user)
+  - automate boot tasks
+    - installing updates
+    - installing software
+    - downloading common files from internet
+
+#### creating an EC2 instance with EC2 User Data
+* EC2 
+* instances => choose AMI (Amazon *linux 2)
+* instance type => t2.micro (free tier eligible)
+* number of instances => 1
+* network, subnet, auto-asign public IP => default
+* IAM role => 
+* EC2 User Data (launched during first boot)
+
+
+##### EC2 User Data
+```
+#!/bin/bash
+# Use this for your user data (script from top to bottom)
+# install httpd (Linux 2 version)
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+```
+
+
+
+---
+###### <Div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 06. EC2 - Instance Storage
 
 ---
@@ -414,15 +491,135 @@ Common roles:
 
 ### what is Docker
 * software development platform to deploy apps.
+* apps are packaged into containers that can run on any OS
 * makes use of containers that will run consistent on any platform.
 * can scale containers up and down
-* docker images can be stored in docker repositories 
+* docker images are stored in docker repositories 
 - public - Docker Hub
 - private - Amazon ECR (Elastic container Registry)
+- alternatives Kubernetes
 
 diff between Docker vs virtual machine VM
-* each VM needs an OS
-* docker makes use of many containers sharing the same resources dont need full VM or OS.
+* each VM needs an OS via Hypervisor
+* whereas docker uses a Docker Daemon that makes use of many containers sharing the same resources dont need full VM or OS.
+
+### ECS, Fargate & ECR Overview
+#### ECS (for Docker)
+* Elastic container service
+* used to launch docker container service on AWS
+* must provision and maintain infrastructure yourself (EC2 instances) *created in advance
+* AWS takes care of starting / stopping containers
+* has integration with Application Load Balancer
+* So you will have multiple EC2 instances, anytime there is a new docker container, ECS is smart enought to figure out which EC2 instance to add the docker container.
+
+#### Fargate (for Docker)
+* Also used to launch Docker containers on AWS.
+* unlike ECS, simpler - as you dont need to provision infrastructure (EC2 instances)
+* serverless 
+* AWS just runs containers for you, based on CPU / RAM you need.
+
+#### ECR
+* ECR stands for Elastic Container Registry
+* a container registry - used to store these docker images so they can be run on AWS.
+* private docker registry on AWS.
+* where you store Docker images so they can be run on ECS or Fargate.
+* Fargate / ECS able to look at these images and create a container from them and run them directly on Fargate service.
+
+Exam: know difference between ECS, Fargate, ECR
+
+### Serverless
+* paradigm where developers dont manage the servers anymore.
+* they just deploy code / functions
+* initially Serverless meant (FaaS - Functions as a service)
+* serverless was pioneered by AWS Lamda (running functions in the cloud), but now also includes anything that's managed: databases, messaging, storage, etc.
+* serverless does NOT mean there are no servers, it means you just dont manage / provision / see them.
+
+serverless examples: S3, dynamoDB, Fargate, Lambda
+
+### Why Lambda?
+With EC2:
+* virtual servers in cloud
+* limited by RAM and CPU
+* continuously running
+* scaling means intervention to add / remove servers
+
+With Lambda: 
+* virtual functions - no servers to manage
+* limited by time - short executions
+* run on-demand
+* scaling is automated
+
+### Benefits of Lambda
+* easy pricing (price per request and compute time) *EXAM
+* free tier 1,000,000 AWS lambda requests 400,000GB soconds compute time.
+* integrated with AWS services
+* event driven (reactive type service) - functions get invoked when needed.
+* Integrated with many programing languages
+* easy monitoring through AWS CloudWatch
+* easy to get more resources per function (up to 10 gb of ram)
+* increasing RAM will also increase CPU and Network quality
+
+### AWS lambda Language support
+* Node.js (JS)
+* Python
+* Java
+* C#
+* Golang
+* Powershell
+* Ruby
+* Custom Runtime API (eg. Rust)
+* Lambda container Image 
+  - Allow you to run docker images ontop of Lambda (must implement Lambda runtime API which is not every Docker image)
+
+#### Example Lambda usage
+* serverless thumbnail creation
+* serverless CRON job (CRON allows you to define a schedule eg. day, month etc to run a script). by default CRON job is run on a LINUX machine, with Serverless, to solve this using the cloud, we use Cloudwatch Events (Event Bridge) which triggers Lambda function.
+
+### API Gateway overview
+* use case: when you want to build a serverless http API <b>*EXAM</b>
+  - example: Lambda CRUD using DynamoDB but we want external clients to be able to access Lambda function. But Lambda functions arent exposed unless...
+* Exposing REST APIs from AWS to client using API gateway
+* API Gateway proxy's request to lambda function.
+* fully managed service for developers to easily create, publish, maintain, monitor and secure APIs
+* Serverless and scalable
+* supports RESTful APIs and WebSocket APIs
+* support for security, user authentication, API throttling, API keys, monitoring
+
+### Batch Overview
+* AWS Batch is a fully managed batch processing service
+* efficiently run 100,000s of computing batch jobs on AWS.
+* A batch job has a start and an end
+* dynamically launch EC2 instances or Spot instances.
+* AWS Batch provisions the right amount of compute / memory
+* You submit or schedule batch jobs and AWS does the rest.
+
+What is it? 
+Batch jobs are defined as Docker Images and run on ECS service.
+
+##### Batch vs Lambda?
+Lambda: 
+  * time limit (15min)
+  * limited to few programming languages
+  * limited disk space
+  * serverless
+
+Batch:
+* no time limit
+* any runtime as long as it is packaged into Docker image
+* rely on EBS for disk storage
+* not serverless. rely on EC2 (can be managed by AWS)
+
+### Lightsail Overview
+* single access point, simpler alternative
+* low predicatable pricing
+* little to no cloud experience <b>*EXAM</b>
+* can setup notifications and monitoring of your lightsale resources.
+* use case: simple web applications, websites, dev/test env
+* has high availability but no autoscaling
+* limited AWS integration
+
+### Other Compute - Summary
+[summary-10-other-compute-services](#summary-10-other-compute-services)
 
 ---
 
