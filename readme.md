@@ -175,6 +175,21 @@
   - Bring AWS Resources (Compute, database, storage) closer to your users
   - Good for Latency-sensitive applications.
 
+#### summary - 13. cloud integrations
+* SQS 
+  - queue service in AWS
+  - multiple producers, messages are kept up to 14 days.
+  - multiple consumers share the read and delete messages when done.
+  - used to decouple applications in AWS
+  
+* SNS
+  - Notification service in AWS
+  - Subscribers: Email, lambda, SQS, HTTP, Mobile etc
+  - Multiple subscribers -> send all messages to all of them
+  - no message retention
+
+* Kinesis: real-time data streaming, persistence and analysis
+* Amazon MQ: Managed Apache MQ in the cloud (MQTT, AMQP etc ...protocols)
 --- 
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
@@ -971,6 +986,99 @@ allows you to place AWS compute, storage, database, and other AWS Services close
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
 ## 13. Cloud Integrations
+* when you have multiple applications, they will have to communicate with each other
+* 2 patterns of application communication
+  * synchronous communication (application to application)
+  * asynchronous / event based (application to queue to application) 
+
+* async (decoupled) application design removes problems with spikes in traffic by introducing a queue
+  - SQS (queue model)
+  - SNS (pub/sub model)
+  - Kinesis (realtime data streaming)
+* these services scale independently from application
+
+### SQS (Simple Queue service)
+  
+##### Whats a queue?
+* we have producer(s) -> sending data into a SQS queue -> read by consumer(s) polling (requesting messages) from the queue
+* consumers share the work (each consumer gets different messages), when done processing message, it's deleted from queue.
+
+##### SQS 
+
+* high through-put message queuing service.
+* fully managed (serverless) used to <b>decouple</b> applications. <b>*EXAM</b>
+* Scales
+* default retention (4days, max 14 days)
+* no limit to messages in queue.
+* messages deleted after they are read
+* low latency (< 10ms on publish and receive)
+* consumers share the work to read messages and scale horizontally.
+
+Example:
+* Web Servers Layer - taking requests through Application Load Balancer, served through EC2 instances in an Auto Scaling Group, and users who want videos processed. 
+SQS Queue - Instead of sending requests directly to video application,
+requests get sent to a SQS Queue.
+Video Processing Layer - made of auto scaling group of EC2 instances. these EC2 Instances read from the queue and process videos.
+* the 2 Auto Scaling groups can scale independently of each other (decoupling)
+
+### SNS (Simple notification services)
+What if you wanted to send 1 message to many receivers.
+
+Method 1: Direct integration
+* Buying service talking to 
+  -> 1. email notification 
+  -> 2. fraud service 
+  -> 3. shipping service 
+  -> 4. SQS queue. 
+  this is quite complicated because we need to write 4 direct integrations.
+
+Method 2: pub/sub type integration
+* Buying service sending message to -> SNS Topic
+* SNS Topic will be smart enough to send notification to 
+  -> 1. email notification 
+  -> 2. fraud service 
+  -> 3. shipping service 
+  -> 4. SQS queue.
+
+* The "Event publishers" only sends messages to one SNS topic.
+* As many "event subscribers" can listen to the SNS topic notifications.
+* Each subscriber will get all the messages.
+* Up to 10,000,000 subscriptions per topic. 100,000 topic limit.
+* SNS Subscribers can be: 
+  - Http/https endpoint
+  - email / SMS messages / mobile notifications
+  - SQS queue
+  - Lambda functions (write your own integration)
+
+### Kinesis
+* real-time big-data streaming <b>*EXAM</b>
+* Managed service to collect, process, and analyze real-time streaming data at any scale.
+
+##### Subservices of Kinesis
+* Kinesis Data Stream - low latency streaming to ingest data at scale from hundreds of thousands of sources.
+* Kinesis Data Firehose - load streams into S3, Redshift, Elastic Search, etc
+* Kinesis Data Analytics - perform realtime analytics on streams using SQL
+* Kinesis Video Streams - monitor realtime video streams for analytics or ML
+
+Flow:
+1. Kinesis Streams receive data from multi types of sources
+2. Kinesis Analytics can then be used to analyze data and produce output in realtime
+3. then can use Kinesis Firehouse to send this data outputs directly into destinations.
+
+### Amazon MQ
+* SNS, SQS are native AWS services using proprietary protocols from AWS.
+* traditional applications running from on-premises may use open protocols
+  such as: MQTT, AMQP, STOMP, Openwire, WSS
+* So sometimes when a company is migrating to the cloud, instead of re-engineering the application to use SQS and SNS, we can use Amazon MQ.
+* Amazon MQ will usually only be used IF a company is migrating to the cloud and needs to use one of these open protocals such as: MQTT, AMQP, STOMP, Openwire, WSS
+otherwise they should use SQS and SNS as they scale a lot better and a lot more integrated with AWS. 
+* Amazon MQ = Managed Apache ActiveMQ
+* Amazon MQ doesnt scale as much as SQS/SNS
+* Amazon MQ runs on a dedicated machine (not serverless)
+* Amazon MQ has both features queue SQS, and notification SNS
+
+### Summary
+[Summary - 13. cloud integrations](#summary-13-cloud-integrations)
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
