@@ -34,7 +34,15 @@
 ### 05. [EC2 - Elastic Compute Cloud](#05-ec2-elastic-compute-cloud)
   + [What can you do with EC2?](#what-can-you-do-with-ec2)
   + [EC2 Virtual server - options](#ec2-virtual-server-options)
-
+  + [creating an EC2 instance with EC2 User Data](#creating-an-ec2-instance-with-ec2-user-data)
+  + [7 different types of EC2 instances](#7-different-types-of-ec2-instances)
+  + [Security Groups](#security-groups)
+    - [Ports you need to know](#ports-you-need-to-know)
+  + [SSH](#ssh)
+  + [Instance Launch types](#instance-launch-types)
+  + [Shared responsibility model](#shared-responsibility-model)
+  + [Summary](#summary)
+  
 ### 06. [EC2 - Instance Storage](#06-ec2-instance-storage)
 
 ### 07. [ELB & ASG - Elastic Load Balancing & Auto Scaling Groups](#07-elb-and-asg-elastic-load-balancing-and-auto-scaling-groups)
@@ -97,6 +105,11 @@
   + [Summary - Leveraging AWS Global Infrastructure](#summary-leveraging-the-aws-global-infrastructure)
 
 ### 13. [Cloud Integrations](#13-cloud-integrations)
+  + [SQS (Simple Queue service)](#sqs-simple-queue-service)
+  + [SNS (Simple notification services)](#sns-simple-notification-services)
+  + [Kinesis](#kinesis)
+  + [Amazon MQ](#amazon-mq)
+  + [Summary](#summary-13-cloud-integrations)
 
 ### 14. [Cloud monitoring](#14-cloud-monitoring)
 
@@ -114,6 +127,7 @@
 
 ### 21. [AWS architecting and Ecosystem](#21-aws-architecting-and-ecosystem)
 
+---
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 
@@ -139,6 +153,14 @@
 * AWS SDK: manage your AWS services using a programming language
 * Access keys: access AWS using CLI or SDK
 * Audit: Credential Reports & IAM Access advisor
+
+#### Summary - 05. EC2 Elastic Compute cloud
+* EC2 instances: AMI (OS) + instance size (CPU+RAM) + storage + security groups + EC2 user data
+* Security groups: firewall attached to EC2 instance
+* EC2 user data: script launched at first start of instance
+* SSH: start a terminal into our EC2 instances (port 22)
+* EC2 instance role: link to IAM roles
+* purchasing options: on-demand, spot, reserved(standard + convertible + scheduled), dedicated hosts , dedicated instance.
 
 #### Summary - 10. Other Compute services
 * Docker - container technology allowing you to run applications
@@ -181,7 +203,7 @@
   - multiple producers, messages are kept up to 14 days.
   - multiple consumers share the read and delete messages when done.
   - used to decouple applications in AWS
-  
+
 * SNS
   - Notification service in AWS
   - Subscribers: Email, lambda, SQS, HTTP, Mobile etc
@@ -509,7 +531,197 @@ systemctl enable httpd
 echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
 ```
 
+### EC2 Instance types
+```
+https://aws.amazon.com/ec2/instance-types/
 
+http://instances.vantage.sh
+
+```
+
+#### 7 different types of EC2 instances
+* General purpose
+  - great for diverity of workload such as web servers or code repositories
+  - balance between: compute, memory, networking
+  - T2.micro *(up to 720 hrs processing with T2.micro)
+
+* pcompute optimized (names generally start with C class)
+  use cases:
+  - great for compute-intensive tasks that require high performance
+  - batch processing workloads
+  - media transcoding
+  - high performance web servers
+  - high performance computuing (HPC)
+  - scientific modeling & machine learning
+  - dedicated gaming servers
+
+* memory optimized (names generally start with R class (r for Ram), X1, High Memory, Z1)
+  - fast performance for workloads that process large data sets in memory
+  use cases:
+  - high performance for relational/non-relational databases
+  - distributed web scale cache stores
+  - in-memory databases optimized for BI (business intelligence)
+  - application performing real-time processing of big unstructured data
+
+* storage optimized (class names I, D, H1)
+  - great for storage-intensive tasks that require high, sequencial read and write access to large datasets on local storage.
+  use cases:
+  - high frequency online transaction processing (OLTP) systems
+  - relational and noSQL databases
+  - cache for in-memory databsaes (eg. Redis)
+  - Data warehousing applications
+  - Distributed file systems
+
+* accelerated Computing
+* instance features
+* measuring instance performance
+
+#### naming convention
+m5.2xlarge
+
+m: instance class
+5: generation (AWS improves over time)
+2xlarge: size within the instance
+
+### Security Groups
+* security group is a firewall around EC2 instance.
+* security groups are the fundamental of network security in AWS.
+* control how traffic is allowed in or out of our EC2 instances.
+* security groups only have "allow" rules
+* security rules can reference by IP or by security group.
+* they regulate: 
+  - access to ports
+  - authorised IP ranges - IPV4 and IPV6
+  - control inbound network
+  - control outbound netowkr
+
+* type, protocol, port, source, description
+* HHTP, TCP, 80, 0.0.0.0/0 (everything can gain entrance), test http page
+
+* note on source: 
+  * 0.0.0.0/0 - everywhere on IPv4
+  * ::/0 - everywhere on IPv6
+
+#### Ports you need to know
+* 22 = SSH (secure shell) - log into a linux instance.
+* 21 = FTP (file transfer protocal)
+* 22 = SFTP (secure file transfer protocal) - upload files using SSH
+* 80 = HTTP (access unsecure websites)
+* 443 = HTTPS (access secure websites)
+* 3389 = RDP (Remote Desktop Protocol) - log into a windows instance
+
+### SSH
+can connect to server using public IP (eg. 35.180.100.144). security groups need allow inbound port 22, source: 0.0.0.0/0
+
+connecting to servers:
+
+Mac:          SSH,                   EC2,  instance connect
+Linux:        SSH,                   EC2,  instance connect
+Win < 10                 putty,      EC2,  instance connect
+Win > 10:     SSH,       putty,      EC2,  instance connect
+
+##### SSH with Linux or Mac:
+* need .pem file to access machine (created when creating user) eg. EC2Tutorial.pem
+* give chmod permission to key
+* 'ec2-user' linux user into amazon machine (default)
+* *EXAM *problem permissions 0644 too open. solution -> chmod 044 key.pem
+
+```
+chmod 0400 EC2Tutorial.pem                              //0400. Allows the owner to read.
+ssh -i EC2Tutorial.pem ec2-user@35.180.100.144          //let only someone with key into E2 machine at that IP.
+```
+
+##### SSH into EC2 Windows
+* SSH allows you to control a remote machine using a command line.
+* configure required parameters for doing SSH on windows using Putty.
+* PuttyGen to generate a key which putty likes. 
+  * load private key -> .pem file -> save private key as .ppk file
+* Putty -> enter IP address (public) from AWS EC2 instance ... host name: ec2-user@35.180.100.144 port: 22
+* save session with name
+* link private key file...connection -> SSH -> Auth -> private key file for authentication -> browse for .ppk file
+* go back to session -> save (this saves the ppk authentication file)
+
+##### SSH into Windows 10
+* AWS ec2 linux default user is always 'ec2-user'
+* if error because permission denied -> go to the .pem file -> right click -> security -> advanced -> the owner of the key is yourself (logged in user) -> disable inheritance -> remove any other user other than youself.
+* make sure youself has full control of the file.
+```
+ssh -i c:\users\Swagfinger\Downloads\Ec2Tututorial.pem ec2-user@35.180.242.162
+
+```
+
+##### instance connect
+* note ec2-user only works for Amazon linux 2 or ubuntu EC2 instances at this moment
+* the instance connect still relies on SSH so port 22 needs to be enabled.
+connect to instance -> select EC2 instance connect -> username -> ec2-user 
+ 
+##### Instance Roles
+* NB never run aws configure on an EC2 instance (other users who do the same will gain access to your credentials)
+* use IAM roles -> right click on EC2 instance -> attach / replace IAM role -> attach role
+* Roles are a way to allow EC2 instances to issue commands against AWS.
+
+### Instance Launch types
+*EXAM
+* On-Demand instances: short workload, predictable pricing
+* Reserved: (minimum 1 year)
+  1. reserved instances: long workloads
+  2. convertible reserved instances: long workloads with flexible instances
+  3. scheduled reserved instances - every thursday between 3 and 6pm 
+* spot instances - short workloads, cheap, can lose instances (less reliable).
+* dedicated hosts: book anb entire physical server, control instance placement.
+
+##### On-demand
+* pay for what you use
+* linux or windows billing per second, after the first minute. all other OS - billing per hour.
+* has highest cost but no upfront payment
+* no long-term commitment
+* recommended for short-term and un-interrupted workloads, where you can't predict how the application will behave.
+
+##### reserved
+* up to 75% discount compared-to on demand
+* 1 year (discount) or 3 year (more discount)
+* no upfront, partial upfront (more discount), all upfront ( even more discount)
+* reserve a specific instance type
+* recommended for steady-state usage applications (databases)
+* convertible reseverd instance (can change EC2 type) up to 54% discount
+* schedule reserve instance - launch within time window you reserve. when you require a fraction of day/week/month over 1->3 yrs.
+
+##### Spot instances
+* can get up to 90% compared to on-demand
+* you can loose instance at any time if the price you are willing to pay is less than the current spot price.
+* most cost-efficient in AWS.
+* useful for workloads resilient to failure: batch jobs, image processing, data analysis, distributed workload.
+* not for critical job or database.
+
+##### EC2 dedicated HOSTS
+* Amazon EC2 dedicated host is a physical server with EC2 instance capacity fully dedicated to your use. dedicated hosts can help you address compliance requirements. using your existing server-bound software licenses.
+* 3yr reservation period.
+* more expensive.
+* per host billing.
+
+##### EC2 dedicated Instance
+* dedicated instance vs dedicated host (*there is a difference)
+* instances runing on hardware dedicated to you
+* per instance billing
+* may share hardware with other instances in same account
+* automatic instance placement
+
+### Shared responsibility model
+##### AWS
+* infrastructure (global network security)
+* isolation of physical hosts
+* replacing faulty hardware
+* compliance validation
+
+##### your responsibility
+* security in the cloud (security group rules)
+* OS patches and updates
+* software on EC2
+* IAM roles & IAM user access management
+* data security on your instances.
+
+### Summary
+[Summary - 05- EC2 Elastic compute cloud](#summary-05-ec2-elastic-compute-cloud)
 
 ---
 ###### <Div style="text-align:right">[table of contents](#table-of-contents)</div>
@@ -1083,6 +1295,32 @@ otherwise they should use SQS and SNS as they scale a lot better and a lot more 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 14. Cloud monitoring
+* getting a better understanding of performance of our cloud deployments
+* CloudWatch provide metrics for every service in AWS
+* Metric is a variable to monitor (eg CPUUtilization, NetworkIn)
+* metrics have time-stamps
+* can create a dashboard of metrics
+
+##### Important Metrics
+* EC2 instances: CPU Utilization, Status Checks, Network (not RAM)
+  - Default metrics every 5 mins
+  - option for detailed monitoring ($$$) metric every minute
+* EBS Volumes: Disk Read/Writes
+* S3 Buckets: BucketSizeBytes, NumberOfObjects, AllRequests
+* Billing: Total Estimate Charge (only in US-east-1)
+* service limits: how much you've been using a service API
+* custom metrics: push your own metrics
+
+### Cloudwatch Alarms
+* alarms are used to trigger notifications for any metric
+* alarm actions: 
+  - auto scaling: increase or decrease EC2 instances "desired" count
+  - EC2 Actions: stop, terminate, reboot, or recover an EC2 instance
+  - SNS notifications: send a notification into an SNS topic
+* various options for the alarm (sampling, %, max, min etc)
+* choose period on which to evaluate an alarm
+* create a billing alarm on CloudWatch Billing metric
+* Alarm status: OK, INSUFFICIENT_DATA, ALARM
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
