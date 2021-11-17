@@ -29,7 +29,7 @@
   + [IAM roles for AWS Services](#iam-roles-for-aws-services)
   + [IAM security tools](#iam-security-tools)
   + [IAM Shared responsibility model](#iam-shared-responsibility-model)
-  + [IAM Summary](#iam-summary)
+  + [Summary](#iam-summary)
 
 ### 05. [EC2 - Elastic Compute Cloud](#05-ec2-elastic-compute-cloud)
   + [What can you do with EC2?](#what-can-you-do-with-ec2)
@@ -53,9 +53,11 @@
   + [EBS vs EFS](#ebs-vs-efs)
   + [Shared responsibility model for EC2 Storage](#shared-responsibility-model-for-ec2-storage)
   + [Amazon FSx](#amazon-fsx)
-  + [EC2 Instance Storage Summary](#ec2-instance-storage-summary)
+  + [Summary](#ec2-instance-storage-summary)
 
 ### 07. [ELB & ASG - Elastic Load Balancing & Auto Scaling Groups](#07-elb-and-asg-elastic-load-balancing-and-auto-scaling-groups)
+  + [High availability, Scalability, elasticity](#high-availability-scalability-elasticity)
+  + [Elastic Load Balancing (ELB)](#elastic-load-balancing-elb)
 
 ### 08. [S3](#08-s3)
 
@@ -184,6 +186,17 @@
 * EFS - network file system, can be attached to 100s of instances in a region
 * EFS-IA - cost-optimized storage class for infrequent accessed files
 * FSx for windows - Network file system for Windows server.
+
+#### Summary - 07. ELB and ASG
+* High Availability vs Scalibility (vertical vs horizontal) vs Elasticity vs agility in the cloud
+* Elastic Load Balancers(ELB)
+  - Distribute traffic across backend EC2 instances, can be multi-Az
+  - support health checks
+  - 3 types: Application LB (http-L7), Network LB (TCP-L4), Classic LB (old)
+* Auto Scaling group (ASG)
+  - implement the elasticity of application, across multiple AZ.
+  - scale EC2 instances based on the demand of your system, replace unhealthy
+  - integrated with ELB
 
 #### Summary - 10. Other Compute services
 * Docker - container technology allowing you to run applications
@@ -888,6 +901,93 @@ EC2 instance with instance store,data will be lost (it is your responsibility to
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 07. ELB and ASG - Elastic Load Balancing and Auto Scaling Groups
+### High Availability, Scalability, Elasticity
+#### Availability
+* goes hand-in-hand with horizontal scaling.
+* goal is to survice data center loss.
+* running instances of same application in atleast 2 availability zones.
+  * auto scaling group in mutli AZ.
+  * load balancer multi AZ.
+
+#### Scalability
+* It can handle greater loads by adapting.
+* 2 kinds: vertical scalability, horizontal scalability (elasticity)
+  * Vertical: increase size of the instance eg. t2.micro -> t2.large. 
+    common for non-distributed systems such as databases. 
+    vertical scale has hardware limit.
+  * Horizontal: increase number of instances / systems for application
+    implies distributed system. common for web applications /modern applications. AWS allows this by: EC2 and auto scaling groups / load balancers
+
+#### Elasticity
+* Once a system is scalable, elasticity means that there will be some "auto-scaling" so that the system can scale based on the load.
+* This is is "cloud-friendly': pay per use, match demand, optimize costs.
+
+#### Agility (distractor)
+* IT resources only a click away with reduced time to make those resources available to developers from weeks to minutes.
+
+### Load Balancing
+* Load balancers are servers that forward internet traffic to multiple servers (EC2 instances) downstream.
+* helps with Elasticity
+* more users, more it will balance load across multiple EC2 instances
+
+##### Why use load balancer?
+* spread load across multiple downstream instances
+* expose a single point of acess (DNS) to your application
+* seamlessly handle failure of downstream instances
+* do regular health checks on instances
+* provide SSL termination (HTTPS) for your websites
+* high available across zones
+
+### ELB (Elastic Load Balancer)
+* An ELB (Elastic Load Balancer) is a managed load balancer
+  - AWS guarantees that it will be working
+  - AWS takes care of upgrades, maintainence, high availability
+  - AWS provides only a few configuration knobs
+* It costs less to setup your own load balancer but it will be a lot more effort on your end (maintenance, integrations)
+
+##### AWS offers 3 kinds of load balancers
+1. Application load balancer - HTTP and HTTPS only - layer 7
+2. Network Load Balancer - ultra high performance, allows for TCP - layer 4
+3. Classical load balancer - layer 4 and 7 (previous gen, older model before split into 7 and 4)
+4. Gateway load balancer - *new
+
+##### ALB - hands on
+* if you start 2 EC2 instances, their IP's are different, using a load balancer will manage a target group of EC2 (select EC2 instances...)
+
+### Auto Scaling Group
+* once you have an application that can be load balanced with a load balancer, 
+* use ASG to automatically create servers in backend.
+* eg. a website's load that has more traffic at certain times
+* scales out and scales in to adjust to requirements
+* automatically register new instances to a load balancer
+* ASG can detect and replace unhealthy instacnes
+* cost savings - only run at optimal capacity
+* ASG has a minimum, desired and maximum capacity for Instances
+* ASG works hand-in-hand with load balancer, web traffic directed by load balancer, as more instances added, load balancer can use them to share load.
+* create an Auto Scaling policy to ensure 
+
+#### ASG hands-on
+* note: you create a launch-template note an instance so the ASG knows how to create instances.
+* Scaling policies - Target tracking scaling policy (automatic scaling) vs none (self managed scaling)
+* terminating an instance to lower than the desired instances will cause ASG to launch new instance to match desired capacity. ie. ASG creates instances automatically. 
+* to stop creation of new EC2 instances to match capacity, delete the ASG / loadbalancer
+
+### ASG strategies
+  1. Manual scaling - update the size of an ASG manually
+  2. Dynamic scaling - respond to changes on demand
+    - when a cloudwatch alarm is triggered eg. CPU usage > 70% then add 2 units
+    - when a cloudwatch alarm is triggered eg. CPU usage < 30% then remove 1
+  3. target tracking scaling
+    - wanting avg ASG cpu to stay around 40%
+  4. scheduled scaling
+    - anticipate scaling based on known usage patterns. eg. scale up at 5pm on friday.
+  5. predictive scaling
+    - uses machine learning to predict future traffic ahead of time
+    - automatically provision the right number of EC2 instances in advance.
+    - based off predictable patterns
+
+### Summary
+[Summary - 07. ELB and ASG](#summary-07-elb-and-asg)
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
