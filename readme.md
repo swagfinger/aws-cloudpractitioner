@@ -41,7 +41,7 @@
   + [SSH](#ssh)
   + [Instance Launch types](#instance-launch-types)
   + [Shared responsibility model](#shared-responsibility-model)
-  + [Summary](#summary)
+  + [Summary](#summary-elb-and-asg)
   
 ### 06. [EC2 - Instance Storage](#06-ec2-instance-storage)
   + [EBS Volume](#ebs-volume)
@@ -57,7 +57,12 @@
 
 ### 07. [ELB & ASG - Elastic Load Balancing & Auto Scaling Groups](#07-elb-and-asg-elastic-load-balancing-and-auto-scaling-groups)
   + [High availability, Scalability, elasticity](#high-availability-scalability-elasticity)
-  + [Elastic Load Balancing (ELB)](#elastic-load-balancing-elb)
+  + [Load Balancing](#load-balancing)
+  + [ELB (Elastic Load Balancer)](#elb-elastic-load-balancer)
+    + [AWS offers 3 kinds of load balancers](#aws-offers-3-kinds-of-load-balancers)
+  + [Auto Scaling Group](#auto-scaling-group)
+  + [ASG strategies](#asg-strategies)
+  + [Summary](#summary-elb-and-asg)
 
 ### 08. [S3](#08-s3)
 
@@ -986,7 +991,7 @@ EC2 instance with instance store,data will be lost (it is your responsibility to
     - automatically provision the right number of EC2 instances in advance.
     - based off predictable patterns
 
-### Summary
+### Summary - ELB and ASG
 [Summary - 07. ELB and ASG](#summary-07-elb-and-asg)
 
 ---
