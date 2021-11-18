@@ -68,16 +68,16 @@
 
 ### 08. [S3](#08-s3)
   + [Security Bucket Policy](#s3-security-bucket-policy)
-  + [Website](#s3-website)
-  + [Versioning](#s3-versioning)
-  + [Server Access logging](#s3-server-access-logging)
+  + [S3 Website](#s3-website)
+  + [S3 Versioning](#s3-versioning)
+  + [S3 Server Access logging](#s3-server-access-logging)
   + [Replication](#s3-replication)
   + [S3 storage classes](#s3-storage-classes)
-  + [S3 Glacier Vault Lock & S3 Object lock](#s3-glacier-vault-lock-&-s3-object-lock)
-  + [Shared Responsibility model - for S3](#shared-responsibility-model-for-s3)
+  + [S3 Glacier Vault Lock and S3 Object lock](#s3-glacier-vault-lock-and-s3-object-lock)
+  + [S3 - Shared Responsibility model](#s3-shared-responsibility-model)
   + [AWS Snow Family](#aws-snow-family)
-  + [Snowball, SnowEdge, SnowMobile](#snowball-snowedge-snowmobile)
-  + [Storage Gateway](#storage-gateway)
+  + [AWS OpsHub](#aws-opshub)
+  + [S3-Storage Gateway](#s3-storage-gateway)
   + [Summary](#summary-08-s3)
   
 ### 09. [Databases and Analytics](#09-database-and-analytics)
@@ -1130,7 +1130,7 @@ Edit Bucket policy 2 methods:
 * ARN -> (name of S3 bucket)/* (*trailing slash star)
 * add statement -> generate policy
 
-### S3 Websites
+### S3 Website
 * s3 great way to host static websites
 * website url: 
 ```
@@ -1151,7 +1151,7 @@ Edit Bucket policy 2 methods:
 * any file not versioned prior will get "null"
 * suspending versioning does not delete previous versions
 
-### S3 Access Logs
+### S3 Server Access Logs
 * for audit purpose, log all access to S3
 * data can be analyzed to figure out cause of an issue, frequenlty accessed files, suspicious patterns.
 * to enable logging, you need to create a bucket and then in the bucket you want to track and log data, server access logging -> enable
@@ -1236,8 +1236,8 @@ Availability
 ###### Amazon Glacier Deep Archive - cheapest
 * standard (12 hrs)
 * bulk (48 hrs) - retrieve multiple files at a time
-
-#### S3 Object lock and Glacier Vault lock
+S3 Glacier Vault Lock & S3 Object lock
+#### S3 Glacier Vault lock and S3 Object lock
 * S3 Object lock
   - Adopt a WORM (Write Once Read Many) Model
   - write object to S3 bucket, then block from deletion for a time frame
@@ -1251,7 +1251,7 @@ Availability
 * Server-side encryption -> server encrypts file after receiving
 * client-side encryption -> user encrypts file before uploading
 
-### Shared responsibility model
+### S3 Shared responsibility model
 * AWS:
   - infrastructure (global security, durability, availability, ability to sustain concurrent loss of data in 2 facilities)
   - configuratuib and vulnerability analysis
