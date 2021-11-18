@@ -1,6 +1,8 @@
 # AWS Cloud Practitioner
 * CLF-C01
 * Learning about AWS eco-system and AWS features.
+* Gain knowledge of the general overview of Cloud services offered by AWS at a high level.
+
 ---
 
 ## Table of contents
@@ -65,8 +67,35 @@
   + [Summary](#summary-elb-and-asg)
 
 ### 08. [S3](#08-s3)
-
+  + [Security Bucket Policy](#s3-security-bucket-policy)
+  + [Website](#s3-website)
+  + [Versioning](#s3-versioning)
+  + [Server Access logging](#s3-server-access-logging)
+  + [Replication](#s3-replication)
+  + [S3 storage classes](#s3-storage-classes)
+  + [S3 Glacier Vault Lock & S3 Object lock](#s3-glacier-vault-lock-&-s3-object-lock)
+  + [Shared Responsibility model - for S3](#shared-responsibility-model-for-s3)
+  + [AWS Snow Family](#aws-snow-family)
+  + [Snowball, SnowEdge, SnowMobile](#snowball-snowedge-snowmobile)
+  + [Storage Gateway](#storage-gateway)
+  + [Summary](#summary-08-s3)
+  
 ### 09. [Databases and Analytics](#09-database-and-analytics)
+  + [RDS and Aurora](#rds-and-aurora)
+  + [RDS deployment options](#rds-deployment-options)
+  + [ElastiCache](#elasticache)
+  + [DynamoDB](#dynamodb)
+  + [Redshift](#redshift)
+  + [EMR](#emr)
+  + [Athena](#athena)
+  + [Quicksight](#quicksight)
+  + [DocumentDB](#documentdb)
+  + [Neptune](#neptune)
+  + [QLDB](#qldb)
+  + [ManagedBlockchain](#managed-blockchain)
+  + [DMS](#dms)
+  + [Glue](#glue)
+  + [Summary](#summary-09-databases-and-analytics)
 
 ### 10. [Other compute services](#10-other-compute-services)
   + [what is docker?](#what-is-docker)
@@ -202,6 +231,23 @@
   - implement the elasticity of application, across multiple AZ.
   - scale EC2 instances based on the demand of your system, replace unhealthy
   - integrated with ELB
+
+#### Summary - 08. S3
+* EXAM - big section in exam, need to know well.
+* Buckets vs Objects: Global unique name, tied to a region
+* S3 Security: IAM policy, S3 Bucket Policy (public access), S3 Encryption
+* S3 Websites: host a static website on Amazon S3
+* S3 Versioning: Multiple versions for files, prevent accidental deletes.
+* S3 Access logs: log request made within your S3 Bucket
+* S3 Replication: Same-region or cross-region, must enable versioning
+* S3 Storage Classes: Standard, IA, 1Z-IA, Intelligent, Glacier, Glacier Deep Archive
+* S3 Lifecycle Rules: transition objects between classes
+* S3 Glacier Vault Lock / S3 Object Lock: WORM (Write Once Read Many)
+* Snow Family: import data onto S3 through a physical device, edge computing
+* OpsHub: desktop application to manage Snow Family devices
+* Storage Gateway: hybrid solution to extend on-premises storage to S3
+
+#### Summary - 09. Databases and analytics
 
 #### Summary - 10. Other Compute services
 * Docker - container technology allowing you to run applications
@@ -997,6 +1043,333 @@ EC2 instance with instance store,data will be lost (it is your responsibility to
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 08. S3 
+* S3 is a building block for many other AWS services.
+  - eg. EBS snapshots actually stored behind scenes on S3 
+* Infinitely scaling storage
+  - backup and storage
+  - disaster recovery
+  - archieve
+  - hybrid cloud storage
+  - application hosting
+  - media hosting
+  - data lakes and big data analytics
+  - software delivery
+  - static websites
+* used as backbone for many website
+* S3 stores files as "objects" and directories as "buckets"
+* buckets but have globally unique name (across all regions - all accounts)
+* although s3 is a global service - buckets are created in a region
+* naming convention - no uppercase, no underscore, 3-63 chars, not an IP.
+* Objects (files) have a key
+  - key is the full path to object
+  - key is composed of prefix (file path) + object name
+```
+s3://my-bucket/my_file.txt
+```
+* there is no concept of directories within buckets
+* object values are the contents of the body
+  - max size is 5TB (5000gb)
+  - if uploading more than 5gb must be multi-part upload
+* Metadata (list of text key/value pairs - system or user metadata)
+* Tags (unicode key / value pair - up to 10) - useful for security / lifecycle.
+* version ID (if versioning is enabled)
+
+#### S3 hands on
+Opening an object (file) in S3
+-> Object actions -> open -> presigned url which contains aws credentials.
+
+-> Object URL -> opening gives error because bucket is not public
+
+### S3 - Security Bucket Policy
+* how to secure bucket:
+#### User based
+* IAM policies - IAM users get IAM policies attached allowing them access to S3 buckets
+
+#### resource based
+* Bucket policies - rules attached to S3 bucket, to allow or deny requests from public or other accounts
+* Object Access Control List (ACL) - finer grain
+* Bucket Access Control List (ACL) - less common
+
+an IAM principle can access the S3 objects if the user IAM permissions allow it, OR if the resouce policy allows it AND there is no Explicit deny. ie. if you give someone access via IAM or bucket policy then all is good.
+
+#### encyption
+encrypt objects in amazon s3 using encryption keys
+
+### Bucket policies (usage)
+1. public access - a anonymous user wants to access s3 bucket -> we attach an s3 bucket policy that allows public access.
+2. IAM user in AWS account -> wants access to S3 bucket -> IAM policy is attached to user.
+3. EC2 instance wants access to S3 bucket -> create EC2 instance Role -> attach IAM permissions to the role.
+4. (advanced) cross-account access - 
+IAM user in another AWS account wants access to S3 ->
+create a S3 bucket policy that allows cross-account access.
+
+### Bucket Policies
+* bucket policies are JSON based
+Props:
+  - Resource - buckets and object
+  - Action - set of API to allow or deny 
+  - Effect - allow / deny
+  - Principle - account or user to apply policy to
+* for public access to the bucket -> there is a "Block all public access" setting which needs to all be disabled to allow public access.
+* Bucket settings can be set at account level.
+
+#### hands-on
+s3 bucket -> permissions -> *create public bucket policy -> MUST first disable "Block public access" -> edit
+
+Edit Bucket policy 2 methods:
+* look at policy examples
+* AWS policy generator
+
+##### AWS policy generator 
+
+#### Public S3 bucket policy
+* select type of policy -> S3 bucket policy
+* effect -> allow
+* principle -> *
+* actions -> GetObject
+* ARN -> (name of S3 bucket)/* (*trailing slash star)
+* add statement -> generate policy
+
+### S3 Websites
+* s3 great way to host static websites
+* website url: 
+```
+<bucket-name>.s3-website-<AWS-region>.amazonaws.com
+<!-- OR when in another region-->
+<bucket-name>.s3-website.<AWS-region>.amazonaws.com
+```
+* if you get a 403 error, make sure the bucket policy allows public read
+* you have to enable a S3 bucket to make it a website
+* bucket properties -> static website hosting -> enable -> host a static website -> index filename 
+* also need an index.html
+* bucket website endpoint
+
+### S3 versioning
+* keep tabs on previous versions
+* enabled at bucket level
+* protected against unintended deletes (can restore a version)
+* any file not versioned prior will get "null"
+* suspending versioning does not delete previous versions
+
+### S3 Access Logs
+* for audit purpose, log all access to S3
+* data can be analyzed to figure out cause of an issue, frequenlty accessed files, suspicious patterns.
+* to enable logging, you need to create a bucket and then in the bucket you want to track and log data, server access logging -> enable
+
+### Replication
+* when you want to copy all contents from one bucket into another
+* buckets can be in differentaccounts
+* copying is asynchronous
+* must give proper IAM permissions to S3
+* Objects before enabling replication are not replicated
+
+CRR (Cross region replication) 
+- compliance, lower latency access, replication across accounts.
+
+SRR (Same region replication)
+- log aggregation, live replication between live and test accounts
+- to see data in same region with different work load on it
+
+#### replication hands-on
+* enable versioning on both buckets
+* main bucket (the one you want to copy from) -> management -> replication rule -> create replciation rule
+
+### S3 Storage Classes
+* Amazon S3 standard - general purpose
+* Amazon S3 Standard-infrequent access (IA)
+* Amazon S3 One Zone-infrequent access
+* Amazon S3 Intelligent Tiering
+* Amazon Glacier
+* Amazon Glacier Deep Archive
+
+Moving objects can be automated using a lifecycle configuration.
+
+#### Durability & Availability
+Durability
+* how often will you lose a file.
+* High durability (single object once every 10000 years)
+* same for all storage classes
+
+Availability
+* how readily a service is available.
+* varies depending on storage class. 
+
+##### S3 Standard - General purpose
+* 99.99% availability
+* frequently accessed data
+* low latency high throughput
+* can sustain 2 concurrent facility failures
+* use cases: big data analytics, mobile gaming applications, content distribution
+
+##### S3 IA (infrequently accessed)
+* suitable for data less frequently accessed, but requres rapid access when needed
+* 99.9% availability
+* lower cost compared to S3 standard, has a retrieval fee.
+* can sustain 2 concurrent facility failures.
+* use case: data store for disaster recovery, backups
+
+##### S3 One Zone - IA
+* same as IA but stored in a single AZ
+* 99.5% availability
+* low latency and high throughput performance
+* lower cost compared to S3-IA (by 20%)
+* use case: secondary backup copies of on-premise data, or storing data you can re-create
+
+##### S3 Intelligent-Tiering
+* 99.9% availability
+* same low latency and high throughput performance of S3 standard
+* cost-optimized by automatically moving objects between two access tiers based on changing access patterns.
+  - frequent access
+  - infrequent access
+* resilient against events that will affect entire AZ.
+
+##### Amazon Glacier & Glacier Deep Archive
+* low cost object storage (in gb/month) meant for archiving / backup
+* data is retained for the longer term (years)
+* various retrieval options of time + fees for retrieval
+
+###### Amazon Glacier - cheap
+* expidated (1-5 min)
+* standard (3-5 hrs)
+* bulk (5-12 hrs)
+
+###### Amazon Glacier Deep Archive - cheapest
+* standard (12 hrs)
+* bulk (48 hrs) - retrieve multiple files at a time
+
+#### S3 Object lock and Glacier Vault lock
+* S3 Object lock
+  - Adopt a WORM (Write Once Read Many) Model
+  - write object to S3 bucket, then block from deletion for a time frame
+* Glacier Vault lock
+  - Adopt a WORM model
+  - lock the policy for future edits (can no longer be changed)
+  - helpful for compliance and data retention
+
+### S3 Encryption
+* no encryption
+* Server-side encryption -> server encrypts file after receiving
+* client-side encryption -> user encrypts file before uploading
+
+### Shared responsibility model
+* AWS:
+  - infrastructure (global security, durability, availability, ability to sustain concurrent loss of data in 2 facilities)
+  - configuratuib and vulnerability analysis
+  - compliance validation
+* user: 
+  - S3 versioning
+  - S3 bucket policies
+  - S3 replication setup
+  - logging and monitoring
+  - S3 storage classes
+  - Data encryption at rest and in transit
+
+### AWS Snow family
+Use cases:
+1. migrate data into and out of AWS.
+2. Edge computing - Highly secure offline-portable devices to collect and process data at the edge.
+
+* if it takes longer than a week to transfer data over network, use Snowball devices.
+* request Snowball device from AWS. then send back to AWS. AWS transfers data back to Amazon AS3 bucket.
+
+* Data Migration: Snowcone, Snowball Edge, Snowmobile
+* Edge Computing: Snowcone, Snowball Edge.
+
+#### Data Migration 
+* can take time to transfer large amounts of data
+challenges: limited connectivity, limited bandwidth, high network costs, shared bandwidth, connection stability
+
+##### Snowcone (smaller device)
+* small, portable, rugged and secure, withstand harsh environments
+* 8tb of storage
+* transfering up to 24tb online / offline
+* use snowcone where snowball does not fit.
+* must provide own battery / cables
+* can be sent back to AWS offline, or connect using AWS DataSync to send data back over network.
+
+##### Snowball Edge 
+* used to move TB or PetaBytes in/out of AWS.
+* pay per data transfer job
+* interface within snowball edge will provide block storage or S3 compatible object storage
+* storage clustering to increase storage size
+* transfer up to petabytes, offline
+Types:
+Snowball Edge storage optimized - 80tb of HDD
+Snowball Edge compute optimized - 42tb of HDD
+
+Use cases:large data cloud migrations, DataCenter decommisions, disaster recovery by backing up into AWS
+
+##### Snowmobile
+* its an actual truck to transfer data
+* transfer Exabytes of data, offline
+* Each snowmobile has 100 PB of capacity.
+* High security, temperature control, GPS, 24/7 video surveilance.
+* better than Snowball for transfering more than 10PB of data.
+
+##### Snow family usage
+1. Request device from AWS console
+2. install snowball client / AWS OpsHub on your servers
+3. connect the snowball to your servers and copy files using the client.
+4. ship device back to AWS
+5. Data loaded to S3 Bucket
+6. Snowball wiped
+
+#### Edge Computing
+* Processing data while its being created at an edgelocation.
+eg. far away from the cloud (can produce but maybe no internet access, or computing power)
+* Snowcode / Snowball Edge can be ordered
+* usage cases: preprocessing data, machine learning at the edge, transcoding media streams.
+* shipping back when done
+
+##### Snowcone
+* 2 cpu, 4gb memory, wired or wireless access
+* powered by USB-C using cord or battery (optional)
+
+
+##### Snowball Edge 
+* Compute Optimized - 52 vCPUs, 208 gb RAM, optional GPU, 42 TB usable storage.
+* Storage Optimized - 40 vCPUs, 80 gb RAM, Object Storage clustering available.
+
+* Both can run EC2 instances and AWS lambda functions (using AWS IoT Greengrass)
+* Longterm deployment options: 1 and 3yrs discounted pricing.
+
+### AWS OpsHub
+* before, used to use CLI (command line to transfer data)
+* OpsHub is a software you install, graphical interface to connect to snow devices.
+  - unlocking and configuration of single or clustered devices
+  - transfering files
+  - launching and managing instances running on snow devices
+  - monitor device metrics (storage capacity, active instances etc)
+
+### AWS storage Cloud Native Options
+* Block storage - Amazon EBS, EC2 Instance store
+* File storage - Amazon EFS
+* Object storage - Amazon S3, Glacier
+
+### S3 Storage Gateway
+* Storage Gateway will be bridge between on-premise data into cloud data in S3.
+* Hybrid storage service to allow on-premises to seamlessly use AWS Cloud.
+* Use cases: disaster recovery, backup and restore, tired storage.
+
+* To expose S3 services into on-premises, you use a storage gateway.
+* using AWS as a Hybrid cloud for storage.
+* part infrastructure on-premises, part infrastructure in the cloud.
+* possible reasons:
+  1. longcloud migrations
+  2. security requirements
+  3. compliance requirements
+  4. IT strategy
+
+#### Types of Storage Gateway 
+(NOT FOR EXAM)
+* File Gateway
+* Volume Gateway
+* Tape Gateway
+
+### Summary - 08. S3
+[Summary - 08. - S3](#summary-08-s3)
+
+
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
