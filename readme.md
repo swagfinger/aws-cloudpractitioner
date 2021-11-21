@@ -77,7 +77,7 @@
   + [S3 - Shared Responsibility model](#s3-shared-responsibility-model)
   + [AWS Snow Family](#aws-snow-family)
   + [AWS OpsHub](#aws-opshub)
-  + [S3-Storage Gateway](#s3-storage-gateway)
+  + [Storage Gateway](#storage-gateway)
   + [Summary](#summary-08-s3)
   
 ### 09. [Databases and Analytics](#09-database-and-analytics)
@@ -92,7 +92,7 @@
   + [DocumentDB](#documentdb)
   + [Neptune](#neptune)
   + [QLDB](#qldb)
-  + [ManagedBlockchain](#managed-blockchain)
+  + [Amazon ManagedBlockchain](#amazon-managed-blockchain)
   + [DMS](#dms)
   + [Glue](#glue)
   + [Summary](#summary-09-databases-and-analytics)
@@ -248,6 +248,20 @@
 * Storage Gateway: hybrid solution to extend on-premises storage to S3
 
 #### Summary - 09. Databases and analytics
+* Relational Databases - OLTP: RDS and Aurora (SQL)
+* Difference between Multi-Az, Read Replicas, Multi-region
+* In-memory Database: ElastiCache
+* Key/Value Database : DynamoDB (serverless) & DAX (cache for DynamoDB)
+* Warehouse - OLAP: Redshift (SQL)
+* Hadoop Cluser: EMR
+* Athena: query data on Amazon S3 (serverless & SQL)
+* QuickSight: dashboards on your data (serverless)
+* DocumentDB: Aurora for MongoDB (Json - NoSQL database)
+* Amazon QLDB: financial transactions ledger (immutable journal, crytographically verifiable)
+* Amazon Managed Blockchain: managed Hyperledger Fabric & Ethereum blockchains
+* Glue: Managed (ETL extract transform load) and Data Catalog service.
+* Database Migration: DMS
+* Neptune: graph Database
 
 #### Summary - 10. Other Compute services
 * Docker - container technology allowing you to run applications
@@ -1369,11 +1383,212 @@ eg. far away from the cloud (can produce but maybe no internet access, or comput
 ### Summary - 08. S3
 [Summary - 08. - S3](#summary-08-s3)
 
-
-
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 09. Database and analytics
+* for STRUCTURED DATA
+* If you want to store data in a STRUCTURED way, you use a database.
+* use indexes to efficiently query/ search through the data.
+* AND define relationships between your datasets
+* Databases are optimized for a purpose and come with different features, shapes and constraints
+* EXAM know which database to use for which usecase.
+* <b>Relational databases</b> - relationships between tables and its columns. using SQL, Scalability: vertical
+* <b>No-SQL databases</b> - databases are built for specific data models, have flexible schemas for building modern applications
+* Benefits
+  - Flexibility: easy to evolve model
+  - Scalability: designed to scale out using distributed clusters (horizontal)
+  - High performance: optimized for a specific data model
+  - higly functional: types optimized for the data model
+* Examples: Key/Value databases, document, graph, in-memory, search databases
+* database has JSON format - subnesting, fields can change over time, support for arrays.
+
+#### Shared responsibility model - AWS Databases
+* AWS offers to manages different databases for us.
+* Benefits of a managed database:
+  - quick to provision
+  - high availability
+  - Scale: Vertical and Horizontal
+  - include utilities to Backup/Restore, Operations, Upgrades
+  - Operating System patching of underlying instance is handled by AWS. AWS responsible for whole database
+  - Monitoring / Alerting integrated
+* Databases can be run on EC2 instance but it doesnt include any of AWS benefits.
+
+### RDS And Aurora
+* Relational Database Service *(only for Relational databases)
+* Managed DB service using SQL
+* Supports: PostgreSQL, MySQL, MariaDB, Oracle, MS SQL, Aurora (AWS database)
+
+#### RDS Advantages vs deploying your own on EC2
+* Managed Database
+* Automatic provisioning
+* Patching database automatic by AWS
+* continuous backup/restore with timestamp
+* Monitoring dashboards
+* read replicas for improved read performance
+* multi-AZ setup for DR (Disaster Recovery)
+* maintenance windows for upgrades
+* scale: vertically / horizontally
+* storage backup by EBS (gp2 or io1)
+* CANNOT SSH into instance
+
+#### Aurora
+* also for relational databases
+* Aurora is proprietary from AWS (not opensouce)
+* Supports: PostgreSQL and MySQL
+* Cloud optimized (5x performance over MySQL on RDS and 3x performance over PostgreSQL on RDS)
+* Automatic storage capacity (10gb to 64tb)
+* cost 20% more than RDS, but more efficient
+* NOT in free tier.
+
+### RDS deployment options
+Architectural decisions:
+* Read Replicas:
+  - Scale the read workload of your main RDS database
+  - Can create up to 5 Read replicas
+  - Data is only Written to the main DB
+
+* Multi-AZ:
+  - failover in case of AZ outage (high availability)
+  - Application still read/write from main RDS
+  - a duplicate failover DB is created in another Availability Zone.
+  - if main RDS database crashes, the failover DB isnt accessible until issue with main database
+  - can only have 1 AZ as failover AZ.
+
+* Multi-Region
+  - create read replicas across different regions
+  - writing is still to main RDS
+  - disaster recovery in case of region issue
+  - local performance for global reads
+  - replication costs
+
+### ElastiCache
+  - ElastiCache is a managed Redis or Memcached database
+  - caches are in-memory databases with high performance, low latency
+  - helps reduce load off databases that have read intensive workloads
+  - usage: same queries on RDS database get cached (ie. cached queries) via ElastiCache so queries going into in-mememory database
+  - AWS takes care of OS maintenance / patching, optimizations, setup, configuration, monitoring, failure recovery and backups.
+
+##### Solutions architecture - cache
+- Elastic Load Balancer -> Ec2 Instance (possibly ASG) -> read/write from RDS DB (slow)
+                                                       -> ElastiCache read/write from cache (in-memory) (fast)
+### Dynamodb
+- fully managed DB, high availability with replications across 3 AZ
+- NoSQL database - not a relational database
+- AWS flagship product - scales to massive workloads (distributed "serverless" database - we dont provision servers)
+- handles Millions of request a second / trillions of row, 100s of TB of storage
+- fast and consistent in performance
+- single-digit millisecond latency - low latency retrieval
+- integrated with IAM for security, authorization and administration
+- low cost and auto scaling capabilities
+
+#### type of data for DynamoDB
+- Key/value database made up of -> Primary key (partition key + sort key)
+                                -> attributes (where you define columns for your data)
+#### DynamoDB Accelerator (DAX)
+- Fully managed in-memory cache for DynamoDB. really well integrated with DynamoDB
+- DAX is only used with DynamoDB
+- 10x performance improvement 
+- single digit millisecond latency to microseconds latency (accessing DynamoDb tables)
+- Secure, highly scalable, highly available.
+- Difference compared to ElastiCache is ElastiCache can be used for other databases whereas DAX is only for DynamoDB
+
+#### DynamoDB - Global Tables
+- Make a DynamoDB table accessible with <b>low latency</b> in multi-regions
+- the tables are in different regions and there is 2-way replication between all tables.
+- active / active replication - (read/write to any region)
+
+### Redshift
+* Redshift is based on PostgreSQL (but not used for Online transaction processing - OLTP which is what RDS is good for)
+* It is for OLAP (Online Analytics Processing - analytics and data warehousing)
+* load data every hour (not every second)
+* 10x better performance than other data warehouse, scales to PB of data
+* Columnar storage of data. Data is column based (instead of row based)
+* has Massively Parallel Query Execution (MPP), highly available
+* pay as you go based on the instances provisioned.
+* has SQL interface to perform queries
+* integrated with BI (business intelligence) tools  suck as AWS Quicksight or Tableau
+
+### EMR
+* Elastic Map Reduce
+* used to make Hadoop clusters (Big Data) to analyze and process vast amount of data
+* clusters can be made of hundreds of EC2 instances that colaborate to analyze data
+* supports Apache spark, Hbase, Presto, Flink
+* EMR takes care of provisioning EC2 instances and configuration
+* auto-scaling and integrated with SPOT instances
+* use case: data processing, machine learning, web indexing, big data.
+
+### Athena
+* Serverless query Service to perform analytics against objects stored in S3
+* use standard SQL lanuage to query the files
+* supports CSV, JSON, ORC, Avro, Parquet (built on Presto)
+* pricing $5 per TB of data scanned
+* using compressed or columnar data (more cost savings)
+* after data is loaded on S3 bucket, Amazon Athena will be used to query and analyze data
+* you can use Quicksight reporting ontop of Anthena.
+* use case: Business intelligence, analytics/ reporting, analyze logs (analyze and query VPC flow logs, ELB logs, CloudTrail trails)
+* EXAM: analyze data in S3 using serverless SQL, use Athena
+
+### Quicksight
+* serverless machine-learning powered business intelligence service to create interactive dashboards
+* fast, automatically scalable, embeddable, with per-session pricing
+* use cases:
+  - business analytics
+  - building visualizations
+  - perform ad-hoc analysis
+  - get business insights using data
+* integrated with RDS, aurora, athena, redshift, S3...
+
+### DocumentDB
+* Aurora is AWS implementation of PostgreSQL / MySQL
+* DocumentDB is the same <b>for MongoDB</b> (NoSQL database)
+* MongoDB is used to store, query and index JSON data
+* Similar "deployment concepts" as Aurora
+* Fully managed, highly available with replication across 3 AZ.
+* Aurura storage automatically grows in increments of 10GB up to 64TB
+* Automatically scales to workloads with millions of request per seconds
+
+### Neptune
+* fully managed Graph database
+* eg. graph db like a social network
+* Highly available across 3 AZ with up to 15 read replicas
+* build and run applications working with highly connected datasects - optimized for these complex and hard queries.
+* can store up to billions of relations and query the graph with milliseconds latency.
+* highly available with replications across multiple AZs
+* great for knowledge graphs (Wikipedia), fraud detection, recommendation engines, social networking. 
+*EXAM anything related to graph databases - Neptune
+
+### QLDB
+* Quantum ledger database
+* ledger is a book recording financial transctions
+* fully managed, serverless, high available, replication across 3 AZ.
+* used to review history of all the changes made to your application data over time
+* immutable system: no entry can be removed or modified, cryptographically verifiable
+* 2-3x better performance than common ledger blockchain frameworks, manipulate data using SQL.
+* Difference with Amazon Managed Blockchain: QLDB has no decentralization component, which is in accordance with financial regulation rules. 
+
+### Amazon Managed Blockchain
+* Blockchain makes it possible to build applications where multiple parties can execute transactions without the need for a trusted, central authority - thus decentralized
+* Amazon Managed Blockchain is a managed service:
+  - join public blockchain networks
+  - or create your own scalable private network
+* compatible with the frameworks Hyperledger Fabric and Ethereum
+
+### DMS
+* Database Migration Service
+* Migrating data from one database to another.
+* source DB -> then you have EC2 instance running DMS -> which allows you to extract from source and DMS inserts data into target DB.
+* source database remains available during the migration
+* supports - Homogeneous migration: oracle to oracle
+           - Heterogeneous migration: Microsoft SQL server to Aurora
+
+### Glue
+* Managed, extract, transform, and load (ETL) service
+* useful to prepare and transform data for analytics
+* fully serverless service
+* Glue used to extract data from multiple sources (we write a script to do transformation) -> once transformed we load data into a eg. Redshift database.
+
+### Summary - 09. Databases and analytics
+[Summary - 09. Databases and analytics](#summary-09-databases-and-analytics)
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
