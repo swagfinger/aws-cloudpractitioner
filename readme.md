@@ -160,6 +160,13 @@
 ### 14. [Cloud monitoring](#14-cloud-monitoring)
 
 ### 15. [VPC & Networking](#15-vpc-and-networking)
+  + [VPC (Virtual Private Cloud), Subnets, Internet Gateways, NAT Gateways](#vpc-virtual-private-cloud-subnets-internet-gateways-nat-gateways)
+  + [Security Groups, Network ACL (NACL), VPC Flow Logs](#security-groups-network-acl-nacl-vpc-flow-logs)
+  + [VPC Peering](#vpc-peering)
+  + [VPC Endpoints](#vpc-endpoints)
+  + [Site to Site VPN and Direct Connect](#site-to-site-vpn-and-direct-connect)
+  + [Transit Gateway](#transit-gateway)
+  + [Summary](#summary-vpc-and-networking)
 
 ### 16. [Security and Compliance](#16-security-and-compliance)
 
@@ -326,6 +333,20 @@
 * Service Health Dashboard: status of all AWS services across all regions.
 * Personal Health Dashboard: AWS Events that impact your infrastructure.
 * CodeGuru: Automade code reviews and application performance recommmendations.
+
+#### Summary - 15. VPC and networking
+* VPC: Virtual private cloud
+* Subnets: tied to an AZ, network partition of the VPC.
+* Internet Gateway: at the VPC level, provide Internet Access.
+* NAT Gateway / Instances: give internet access to private subnets
+* NACL: Stateless, subnet rules for inbound and outbound
+* Security Groups: Stateful, operate at the EC2 instance level or ENI
+* VPC Peering: Connect 2 VPC with non-overlapping IP ranges, non-transitive
+* VPC Endpoints: provide private access to AWS Services within VPC
+* VPC Flow logs: network traffic logs
+* Site to Site VPN: VPN over public internet between on-premises DC and AWS.
+* Direct Connect: direct private connection to AWS.
+* Transit Gateway: Connect thousands of VPC and on-premises networks together.
 
 --- 
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
@@ -2310,6 +2331,96 @@ otherwise they should use SQS and SNS as they scale a lot better and a lot more 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 15. VPC and Networking
+### VPC (Virtual Private Cloud), Subnets, Internet Gateways, NAT Gateways
+* private network to deploy resources (EC2)
+* VPC linked to a region (multi-regions require multi VPC)
+* VPC has subnets (partition of your network) associated with an AZ
+* public subnet has direct connectivity to internet (using Internet Gateway to connect to internet)
+* private subnet DOES NOT have access to internet
+* use Route Tables to access internet
+* You can put your database tables inside Private subnet.
+* VPC has CIDR Range, which is a range of addresses allowed within VPC.
+
+##### access to internet
+* public subnet -> Internet gateway
+* private subnet ->  
+  * NAT Gateways - AWS-Managed
+  * NAT Instances - Self managed
+* NAT instance is created in the public gateway, then a route from Private subnet to NAT and then from that to IGW.
+
+### Security Groups, Network ACL (NACL), VPC Flow Logs
+
+###### First line of defence
+* at Subnet level
+* NACL is a firewall which controls traffic from and to subnet.
+* Can have ALLOW and DENY rules
+* are attached at the Subnet level
+* rules only include IP Addresses
+
+###### second line of defence
+* at EC2 instance level
+* Security groups
+* firewall that controls traffic to and from an ENI / EC2 instance.
+* can only have ALLOW rules.
+* rules include IP addresses and other security groups.
+
+#### VPC Flowlogs
+* capture information about IP traffic going into your interfaces
+  - VPC flowlog
+  - Subnet flowlog
+  - Elastic Network Interface Flow Logs
+* helps monitor and troubleshoot connectivity issues
+  - subnets to internet
+  - subnets to subnets
+  - internet to subnets
+* Captures network information from AWS managed interfaces too: Elastic load balancers, ElastiCache, RDS, Aurora etc.
+* VPC flowlogs data can be exported into S3 / CloudWatch Logs.
+
+### VPC Peering
+* connect 2 VPC privately and make them behave as if they are in same network
+* must not have overlapping CIDR address range
+* VPC peering connection is not transitive 
+
+### VPC Endpoints
+* endpoints allow you to connect to AWS services using a private network instead of the public www network
+* enhanced security, less latency
+
+###### VPC Endpoint Gateway
+* VPC Endpoint Gateway is only used to connect to S3 or DynamoDB.
+* eg. VPC with private subnet and EC2 instance in subnet ->
+wants to connect to S3 or DynamoDB -> (we create VPC endpoint of type Gateway)
+
+###### VPC Endpoint Interface (ENI)
+* connect to the rest AWS services.
+
+### Site to Site VPN and Direct Connect
+* regarding Hybrid cloud
+* say you have a on-premises Data-center and you want to connect to VPC
+
+###### Direct Connect
+* physical connection between on-premises and AWS
+* connection is private, secure and fast
+* goes over the private network
+* takes atleast 1 month to establish
+
+###### Site to Site VPN
+* Connect an On-premises VPN to AWS
+  - on the on-premises: must use a Customer Gateway (CGW)
+  - on the AWS side: must use a vitual private gateway (VGW)
+  - once provisioned, they are connected using a site-to-site VPN.
+* the connection is automatically encrypted.
+* goes over the public internet
+
+### Transit Gateway
+* network topology can become complicated.
+* new service for having transitive peering between thousands of VPC and on-premises with a hub-and-spoke (star) connection
+* we have a AWS transit gateway in middle with everything connect to it...
+  - all Amazon VPC 
+  - Direct connect Gateway
+  - VPN connections 
+
+### Summary - VPC and Networking
+[Summary - 15. VPC and networking](#summary-15-vpc-and-networking)
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
