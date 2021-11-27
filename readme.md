@@ -158,6 +158,15 @@
   + [Summary](#summary-13-cloud-integrations)
 
 ### 14. [Cloud monitoring](#14-cloud-monitoring)
+  + [Cloudwatch Alarms](#cloudwatch-alarms)
+  + [Cloudwatch Logs](#cloudwatch-logs)
+  + [Cloudwatch Events / EventBridge](#cloudwatch-events-eventbridge)
+  + [CloudTrial](#cloudtrial)
+  + [X-ray](#x-ray)
+  + [CodeGuru](#codeguru)
+  + [Service Health Dashboard](#service-health-dashboard)
+  + [personal health dashboard](#personal-health-dashboard)
+  + [Summary](#cloudmonitoring-summary)
 
 ### 15. [VPC & Networking](#15-vpc-and-networking)
   + [VPC (Virtual Private Cloud), Subnets, Internet Gateways, NAT Gateways](#vpc-virtual-private-cloud-subnets-internet-gateways-nat-gateways)
