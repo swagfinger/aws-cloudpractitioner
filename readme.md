@@ -2381,7 +2381,7 @@ otherwise they should use SQS and SNS as they scale a lot better and a lot more 
 
 ### Personal health Dashboard
 * provide alert and remediation guidance when AWS is experiencing events that may impact you
-* gives personalized fview into the performance and availability of the AWS services underlying your AWS resources.
+* gives personalized view into the performance and availability of the AWS services underlying your AWS resources.
 * Dashboard provides relevant and timely information to help you manage events in progress and provides proactive notification to help you plan for scheduled activities.
 * [https://phd.aws.amazon.com/](https://phd.aws.amazon.com/)
 * shows how AWS outages directly impact you and your AWS resources.
