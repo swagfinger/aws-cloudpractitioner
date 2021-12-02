@@ -3109,10 +3109,135 @@ Overview Categories:
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 19. Advanced Identity
+##### STS (Security Token Services)
+  - Behind the scenes service by AWS called 
+  - enables you to create temporary, limited-privileges credentials to access your AWS resources.
+* Short-term credentials: you configure expiration period.
+* Use Cases: 
+  * Identity Federation - manage user identities in external systems, and provide them with STS tokens to access AWS resources.
+  * IAM Roles for cross/same account access
+  * IAM Roles for Amazon EC2 - provid temporary credentials for EC2 instances to access AWS resources.
+
+#### Cognito
+* Identify for your Web and Mobile applications users (potentially millions)
+* Way to manage users on AWS without giving them IAM credentials (which is for your company thats writing the code), you create a user in Cognito
+* users/mobile apps interface with Coginito for stuff like login (login with social media accounts. Social Identity Provider)
+
+### Directory Services
+* MS Active Directory (AD) - is found on Windows servers with AD Domain Services 
+  * Database of objects: user accounts, computers, printers, file shares, security groups
+  * centralized security management, create account, assign permissions 
+
+##### AWS Directory Services 
+- AWS Managed Microsoft AD
+  - create own AD in AWS, manage users locally, supports MFA
+  - establish "trust" connections with your on-premise AD
+- AD Connector
+  - Directory Gateway (proxy) to redirect to on-premise AD
+  - Users are manged on the on-premise AD
+- Simple AD
+  - AD compatible managed directory on AWS
+  - Cannot be joined with on-premise AD
+
+### Single Sign-on (SSO)
+- one login to access multiple accounts and 3rd party business applications
+- Integrated with AWS Organizations
+- Supports SAML 2.0 Markup
+- Integration with on-premise active directory
+
+### Summary - Advanced Identity
+* IAM 
+  - Identity and acccess management inside your AWS account
+  - For users that you trust and belong to your company
+* Organizations
+  - Manage multiple AWS accounts
+* STS (Security Token Services) - temporary, limited-privileges credentials to access AWS resources
+* Cognito - create a database of users for your mobile and web applications
+* Directory services - integrate MS Active Directory in AWS
+* Single Sign-on (SSO) - one login for Multiple AWS Accoutns and applications.
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 20. Other Services
+
+##### Workspaces
+* managed Desktop as a Service (DaaS) solution to easily provision Windows or Linux desktops
+* Greate to eliminate management of on-premise VDI (Virtual desktop infrastructure) - (eg. secure windows desktop in the cloud)
+* Fast and quickly scalable to thousands of users
+* Secured data - integrates with KMS
+* pay-as-you-go service with monthly or hourly rates
+
+##### AppStream 2.0
+* Desktop Application streaming service
+* Deliver to any computer -> without acquiring and provisioning infrastructure
+* The application is delivered from within a web browser
+
+##### Workspaces vs AppStream 2.0
+##### Workspace
+  * fully managed VDI and desktop available
+  * The users connect to the VDI and open native or WAM applications
+  * Worksapces are on-demand or always on
+##### AppStream 2.0
+  * Stream a desktop application to web browsers (no need to connect to VDI)
+  * Works with any device (that has a browser)
+  * Allow to configure an instance type per application type (CPU, RAM, GPU)
+
+### Sumerian
+  * create and run virtual reality (VR) augmented reality (AR) and 3D applications
+  * can be used to quickly create 3D models with animations
+  * ready-to-use templates and assets - no programming or 3D expertise required
+  * accessible via web-browser URLs or on popular hardware for AR/VR
+
+### AWS IoT Core
+* Internet of Things - the network of internet connected devices that are able to collect and transfer data
+* Allows you to easily collect IoT devices to AWS Cloud
+* Serverless, secure and scale to billions of devices and trillions of messages
+* applications can communicate with devices even when they arent connected
+* Integrates with a lot of AWS Services
+* Build IoT applications that gather, process, analyze and act on data
+
+### Elastic Transcoder
+* Converts media files stored in S3 into media files in the formats required by consumer playback devices
+* Easy to use, highly scalable
+* Cost effective - pay for transcoding time
+* fully managed and secure
+
+### Device Farn
+* fully managed service, tests your web and mobile apps against:
+  desktop browsers, real mobile devices, and tables
+* runs tests concurrently on multiple devices
+* ability to configure device settings
+
+### AWS Backup
+* fully managed service to centrally manage and automate backups across AWS services.
+* on-demand and scheduled backups
+* Supports PITR (Point-in-time-recovery)
+* retention periods, lifecycle management, backup policies
+* Cross region backup
+* Cross Account Backup (using AWS organizations)
+
+### Disaster Recovery Strategies
+* Backup and restore (Cheapest)
+* Pilot light - critical functions of app are in the cloud, minimal setup.
+* Warm standby - full version of app in cloud at minimum size.
+* multi-site/hot-site - full version of app at full size in cloud
+
+### CloudEndure
+* quickly and easily recover your physical, virtual, and cloud-based servers into AWS.
+*  eg. protect most critical databases (oracle, mysql, sql server), enterprise apps (SAP), protect data from ransomware
+* continuous block-level replication for your servers.
+
+### AWS Datasync
+* move large amount of data from on-premises to AWS.
+* Can synchronize to: Amazon S3, EFS, FSx
+* replication tasks can be scheduled hourly, daily, weekly
+* the replication tasks are <b>incremental</b> after the first full load.
+
+### AWS Fault Injection Simulator
+* run fault injection experiments on AWS workloads
+* based on Chaos Engineering - stressing an application by creating disruptive events (eg. sudden increase CPU or memory), observing how the system responds and implement improvements
+* Helps uncover hidden bugs and performance bottlenecks.
+* use pre-built templates that generate the desired disruptions.
 
 ---
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
