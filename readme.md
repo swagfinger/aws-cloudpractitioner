@@ -3243,7 +3243,155 @@ Overview Categories:
 ###### <div style="text-align:right">[table of contents](#table-of-contents)</div>
 ## 21. AWS architecting and Ecosystem
 
+### General Guiding principles
+* Well architected framework
+  - stop guessing your capacity needs (use Autoscaling)
+  - test systems at production scale
+* automate -> making architectural experimentation easier
+* allow for evolutionary architectures - design based on changing requirements
+* drive archtitectures using data
+* improve through game days -> simulate flash sale days
 
+##### Design principles
+* Scalability: vertical and horizontal
+* Disposable Resources: servers should be disposable and easily reconfigured
+* Automation: Serverless, infrastructure as a service, autoscaling
+* Loose Coupling: 
+  - Monolith are applictions that do more over time, become bigger
+  - Break it down into smaller loosely coupled components
+  - A change or a failure in one component should not cascade to other components
+* services not servers
+  - Dont just use EC2
+  - use managed services, databases, serverless, etc.
+
+### Well Architected Framework 5 pillars
+1. Operational Excellence - ability to run and monitor systems to deliver business value and continually improve supporting processes and procedures
+  ##### Design principles
+  * Perform operation as code - infrastructure as code
+  * annotate documentation - documentation
+  * make frequenct, small, reversible changes
+  * Refine operations procedures frequently
+  * Anticipate failure - learn from failure
+  ##### Operational Excellence AWS Services
+  * Prepare - AWS CloudFormation, AWS Config
+  * Operate - AWS CloudFormation, AWS Config, AWS CloudTrail, Amazon CloudWatch, AWS-Xray
+  * Evolve - AWS CloudFormation, CICD tools (AWSCodeBuild, AWSCodeCommit, AWSCodeDeploy, AWS CodePipeline)
+
+2. Security - ability to protect information, systems and assets while deliverying business value through risk assessment and mitigation strategies.
+  ##### Design principles
+  * Implement a strong identity foundation - centralize privilege management and reduce reliance on long-term credentials / principles of least privilege - IAM
+  * Enable traceability - integrate logs with systems
+  * apply security at all layers - edge network, VPC, subnet, load balancer, every instance
+  * automate security best practices
+  * protect data in transit and at rest - encryption, tokenization, access control
+  * Keep people away from data
+  * Prepare for security events - run simulations
+  ##### Security AWS Services
+  * Identity and Access Management: IAM, AWS-STS, MFA tokens, AWS Organizations
+  * Detective Controls: AWS Config, AWS CloudTrial, Amazon CloudWatch
+  * Infrastructure Protection: Amazon CloudFront, Amazon VPC, AWS Shield, AWS WAF, Amazon Inspector
+  * Data Protection: KMS, S3, Elastic Load Balancing (ELB), Amazon EBS, Amazon RDS
+  * Incident Response: IAM, AWS CloudFormation, Amazon CloudWatch Events
+
+3. Reliability - ability of system to recover from infrastructure or service disruptions, dynamically acquire computing resources to meet demand, mitigate disruptions such as misconfigurations or transient network issues.
+  ##### Design principles
+  * Test recovery procedures
+  * Automatically recover from failure
+  * Scale horizontally to increase system availability / load
+  * stop guessing capacity - autoscaling
+  * Manage change through automation
+  ##### Reliability AWS Services
+  * Foundations: IAM, Amazon VPC, Service Limits, Trusted Advisor
+  * Change Management: AWS Auto Scaling, Amazon CloudWatch, AWS CloudTrial, AWS Config
+  * Failure Management: Backups, AWS CloudFormation, Amazon S3, Amazon S3 Glacier, Amazon Route S3
+
+4. Performance Efficiency - Ability to use computing resources efficiently to meet system requirements, and to maintain that efficiency as demand changes and technologies evolve. - adapting and providing best performance
+  ##### Design Principles
+  * use advanced technologies - tracking technologies - as products become available maybe can use them in your products
+  * go global in minutes - Easy deployment in multiple regions
+  * use serverless architectures - avoid burden of managing servers
+  * Experiment more often
+  * mechanical sympathy - be aware of all AWS Services
+  ##### Performance Efficiency AWS Services
+  * Selection: AWS Auto Scaling, AWS Lambda, Amazon Elastic Block Store (EBS), Amazon Simple Storage Service (S3), Amazon RDS
+  * Review: AWS Cloud Formation, AWS News blog
+  * Monitoring: Amazon CloudWatch, AWS Lambda
+  * TradeOffs - Amazon RDS, Amazon Elasticache, AWS Snowball, Amazon Cloudfront
+
+5. Cost Optimization - Ability to run systems to deliver business value at lowest price
+  ##### Design Principles
+  * Adopt a comsumable mode - pay only for what you use
+  * measure overall efficiency - use CloudWatch
+  * Stop spending money on data center operations - AWS does the infrastructure part and enables customer to focus on organization projects
+  * Analyze and attribute expenditure - Accurate identification of system usage and costs, helps measure return on investment (ROI) - Make sure to use tags
+  * Use managed and application level services to reduce cost of ownership - As managed services operate at cloud scale, they can offer a lower cost per transaction or service
+  ##### Cost Optimization AWS Services
+  * Expenditure awareness - AWS Budgets, AWS Cost and Usage Report, AWS Cost Explorer, Reserved Instance Reporting
+  * Cost-Effective Resources - Spot Instance, Reserved Instance, Amazon S3 Glacier
+  * Matching Supply and demand - AWS AutoScaling , AWS Lambda
+  * Optimizing over time - AWS Trusted Advisor, AWS Cost and Usage report, AWS newsblog
+
+### AWS Well-Architected Tool
+* Tool to review your architectures against the 5 pillars (Well-architected Framework) and adopt best architectural best practices
+* How does it work? 
+1. Select workload and answer questions 
+2. review your answers against the 5 pillars 
+3. obtain advice: get videos and docs, generate report and see results in a dashboard.
+
+### Right Sizing
+* EC2 has many instance types, but choosing the most powerful instance type isnt the best choice, because the cloud is elastic
+* Right sizing is process of matching instance types and sizes to your workload performance and capacity requirements at the lowest possible cost
+* Scaling up is easy so always start small
+* process of looking at the deployed instances and identifying opportunities to eliminate or downsize without compromising capacity or other requirements, which results in lower costs
+* RightSize before 
+  1. Cloud Migration
+  2. Continuously after the cloud onboarding process (requirements change)
+Tools that can help with rightsizing:
+  * Cloudwatch
+  * Cost Explorer
+  * Trusted Advisor
+  * 3rd party tools
+
+### AWS Ecosystem
+1. Free resources 
+  * AWS Blogs
+  * AWS Forums
+  * AWS Whitepapers & guides
+  * AWS quickstarts
+  * AWS Solutions
+2. AWS Support
+  ##### Developer
+  * Business hours email access to cloud Support associates
+  * General guidance < 24 business hrs
+  * System impaired < 12 business hrs
+  ##### Business
+  * 24/7 phone, email, and chat access to cloud support engineers
+  * Production system impared: < 4 hrs
+  * Prodcution system down: < 1 hr
+  ##### Enterprise 
+  * Access to technical account manager (TAM)
+  * Concierge support team (for billing and account best practices)
+  * Business-critical system down: < 15 min
+3. AWS MarketPlace - buy/sell
+4. AWS Training
+  * AWS Digital (online) and Clasroom training (in-person or virtual)
+  * AWS Private training (for org)
+  * training and certification for US Government
+  * Training and certification for Enterprise
+  * AWS Academy - helps universities teach AWS
+  * online teacher teaching about AWS
+5. AWS professional services and partner network
+  * AWS Professional Services Organization is a global team of experts that can help with AWS
+  * work alongside your team and a chosen member of APN 
+  * APN = (AWS Partner Network)
+  * APN Technology Partners: providing hardware, connectivity and software
+  * APN Consulting Partners: help build on AWS
+  * APN training partners: find who can help you learn AWS
+  * AWS Competency Program: AWS Competencies are granted to APN Partners who have demonstrated technical proficiency and proven customer success in specialzed solution areas.
+  * AWS Navigate Program: Help partners become better partners.
+
+### AWS Knowledge center
+* Web portal that contains most frequently asked questions and requests.
 ---
 
 ## Source
